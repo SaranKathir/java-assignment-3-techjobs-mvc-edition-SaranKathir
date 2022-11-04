@@ -18,6 +18,7 @@ import static org.launchcode.techjobs.mvc.controllers.ListController.columnChoic
  * Created by LaunchCode
  */
 @Controller
+
 @RequestMapping("search")
 public class SearchController {
 
@@ -33,13 +34,18 @@ public class SearchController {
     public String displaySearchResults(Model model, @RequestParam String searchType, @RequestParam String searchTerm){
 
         ArrayList<Job> jobs;
-        jobs = JobData.findByColumnAndValue(searchType, searchTerm);
-        model.addAttribute("type", searchType);
-        model.addAttribute("columns", columnChoices);
-        model.addAttribute("title", "Search By: " + columnChoices.get(searchType) + " and Search Term: " + searchTerm);
-        model.addAttribute("jobs", jobs);
-        return "search.html";
+        if(searchTerm == "all" || searchTerm == ""){
+            jobs = JobData.findAll();
+            model.addAttribute("jobs",jobs);
+        }else {
+            jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+            model.addAttribute("type", searchType);
+            model.addAttribute("columns", columnChoices);
+            model.addAttribute("title", "Search By: " + columnChoices.get(searchType) + " and Search Term: " + searchTerm);
+            model.addAttribute("jobs", jobs);
 
+        }
+        return "search.html";
     }
 
 }
